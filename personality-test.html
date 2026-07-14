@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Personality Test</title>
+
+<style>
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    max-width:900px;
+    margin:auto;
+    padding:30px;
+    background:#f5f5f5;
+    line-height:1.6;
+}
+
+h1,h2{
+    text-align:center;
+}
+
+.question{
+    background:white;
+    padding:20px;
+    margin:20px 0;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+.option{
+    display:block;
+    margin:10px 0;
+    cursor:pointer;
+}
+
+button{
+    display:block;
+    margin:30px auto;
+    padding:12px 30px;
+    font-size:18px;
+    border:none;
+    border-radius:8px;
+    background:black;
+    color:white;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#333;
+}
+
+#result{
+    display:none;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    margin-top:20px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+</style>
+</head>
+
+<body>
+
+<h1>🧠 A Personality Test</h1>
+
+<p style="text-align:center;">
+Welcome. Choose the answer that feels most like you.
+</p>
+
+<form id="quiz">
+
+<div class="question">
+<h2>1. Zombie Apocalypse...</h2>
+
+<label class="option">
+<input type="radio" name="q1" value="A">
+Join the strongest zombie and climb the undead corporate ladder.
+</label>
+
+<label class="option">
+<input type="radio" name="q1" value="B">
+Lock the doors and enjoy the last moments.
+</label>
+
+<label class="option">
+<input type="radio" name="q1" value="C">
+Join a survivor camp and become the boss's favourite kid.
+</label>
+
+<label class="option">
+<input type="radio" name="q1" value="D">
+Steal an RV and go on a zombie road trip.
+</label>
+</div>
+
+
+<div class="question">
+<h2>2. Bank Robbery</h2>
+
+<label class="option">
+<input type="radio" name="q2" value="A">
+Offer the vault code for a commission.
+</label>
+
+<label class="option">
+<input type="radio" name="q2" value="B">
+Hide in the toilet and hope nobody notices.
+</label>
+
+<label class="option">
+<input type="radio" name="q2" value="C">
+Turn the situation into an unexpected job interview.
+</label>
+
+<label class="option">
+<input type="radio" name="q2" value="D">
+Help people escape when the opportunity appears.
+</label>
+</div>
+
+
+<div class="question">
+<h2>3. Friend's Dirty Secret</h2>
+
+<label class="option">
+<input type="radio" name="q3" value="A">
+Take a photo. This situation looks valuable.
+</label>
+
+<label class="option">
+<input type="radio" name="q3" value="B">
+Pretend I saw nothing and talk to ChatGPT.
+</label>
+
+<label class="option">
+<input type="radio" name="q3" value="C">
+Ask my friend to introduce me to rich people too.
+</label>
+
+<label class="option">
+<input type="radio" name="q3" value="D">
+Confront them directly.
+</label>
+</div>
+
+
+<div class="question">
+<h2>4. Final Project Disaster</h2>
+
+<label class="option">
+<input type="radio" name="q4" value="A">
+Secure evidence first and negotiate compensation.
+</label>
+
+<label class="option">
+<input type="radio" name="q4" value="B">
+Ask ChatGPT what to do next.
+</label>
+
+<label class="option">
+<input type="radio" name="q4" value="C">
+Gather everyone and demand a do-over.
+</label>
+
+<label class="option">
+<input type="radio" name="q4" value="D">
+Present the draft anyway and defend your work.
+</label>
+</div>
+
+<button type="button" onclick="calculateResult()">
+Reveal My Personality
+</button>
+
+</form>
+
+<div id="result"></div>
+
+<script>
+
+function calculateResult(){
+
+    const scores = {
+        A:0,
+        B:0,
+        C:0,
+        D:0
+    };
+
+    for(let i=1;i<=4;i++){
+
+        const answer =
+        document.querySelector(
+        'input[name="q'+i+'"]:checked'
+        );
+
+        if(!answer){
+            alert("Please answer every question.");
+            return;
+        }
+
+        scores[answer.value]++;
+    }
+
+    let winner = "A";
+
+    for(let key in scores){
+        if(scores[key] > scores[winner]){
+            winner = key;
+        }
+    }
+
+    const personalities = {
+
+        A:{
+            title:"💰 The Opportunist",
+            text:"You turn chaos into opportunity and always spot potential advantages before everyone else."
+        },
+
+        B:{
+            title:"😴 The Survivor",
+            text:"You avoid unnecessary drama and somehow outlast everyone with minimal effort."
+        },
+
+        C:{
+            title:"🤝 The Strategist",
+            text:"Your greatest weapon is people. Networking and diplomacy solve almost everything."
+        },
+
+        D:{
+            title:"⚔️ The Maverick",
+            text:"You act boldly, improvise constantly, and somehow make impossible plans work."
+        }
+    };
+
+    const result = document.getElementById("result");
+
+    result.innerHTML = `
+        <h2>${personalities[winner].title}</h2>
+        <p>${personalities[winner].text}</p>
+    `;
+
+    result.style.display = "block";
+
+    result.scrollIntoView({
+        behavior:"smooth"
+    });
+}
+
+</script>
+
+</body>
+</html>
