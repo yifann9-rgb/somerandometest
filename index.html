@@ -57,6 +57,65 @@ button:hover{
     margin-top:20px;
     box-shadow:0 2px 8px rgba(0,0,0,.1);
 }
+
+.form-group {
+    margin: 15px 0;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.submit-section {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.submit-btn {
+    background: #28a745;
+    margin: 10px 5px;
+    display: inline-block;
+}
+
+.submit-btn:hover {
+    background: #218838;
+}
+
+.skip-btn {
+    background: #6c757d;
+    margin: 10px 5px;
+    display: inline-block;
+}
+
+.skip-btn:hover {
+    background: #5a6268;
+}
+
+.success-message {
+    display: none;
+    background: #d4edda;
+    color: #155724;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    color: #666;
+}
 </style>
 </head>
 
@@ -239,6 +298,25 @@ function calculateResult(){
     result.innerHTML = `
         <h2>${personalities[winner].title}</h2>
         <p>${personalities[winner].text}</p>
+        
+        <div class="form-group">
+            <label for="email">Would you like to share your result? (Optional)</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com">
+        </div>
+        
+        <div class="form-group">
+            <label for="name">Your Name (Optional)</label>
+            <input type="text" id="name" name="name" placeholder="Your name">
+        </div>
+        
+        <div class="loading" id="loading">Sending your result...</div>
+        
+        <div class="submit-section">
+            <button type="button" class="submit-btn" onclick="submitResult('${winner}')">Share My Result</button>
+            <button type="button" class="skip-btn" onclick="skipSubmit()">Skip</button>
+        </div>
+        
+        <div class="success-message" id="successMessage">✅ Thank you! Your result has been shared.</div>
     `;
 
     result.style.display = "block";
@@ -246,6 +324,52 @@ function calculateResult(){
     result.scrollIntoView({
         behavior:"smooth"
     });
+}
+
+function submitResult(personality) {
+    const email = document.getElementById("email").value;
+    const name = document.getElementById("name").value || "Anonymous";
+    const loading = document.getElementById("loading");
+    const successMessage = document.getElementById("successMessage");
+    
+    if (!email) {
+        alert("Please enter your email to share your result.");
+        return;
+    }
+    
+    loading.style.display = "block";
+    
+    // Send to Formspree
+    const formData = new FormData();
+    formData.append("email", email);
+    formData.append("name", name);
+    formData.append("personality_type", personality);
+    formData.append("timestamp", new Date().toLocaleString());
+    
+    fetch("https://formspree.io/f/xyzaieyz", {
+        method: "POST",
+        body: formData,
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        loading.style.display = "none";
+        if (response.ok) {
+            successMessage.style.display = "block";
+        } else {
+            alert("There was an error sending your result. Please try again.");
+        }
+    })
+    .catch(error => {
+        loading.style.display = "none";
+        console.error("Error:", error);
+        alert("There was an error sending your result. Please try again.");
+    });
+}
+
+function skipSubmit() {
+    alert("No problem! Thanks for taking the test!");
 }
 
 </script>
